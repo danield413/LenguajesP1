@@ -1,0 +1,9 @@
+{
+    "noTerminales" : ["exp"],
+    "producciones" : [
+         ["exp", "exp + term"],
+         ["exp", "exp - term"],
+         ["exp", "term"]
+     ],
+    "inicial" : "exp"
+}

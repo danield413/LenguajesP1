@@ -1,0 +1,9 @@
+{
+    "noTerminales" : ["CN", "FN"],
+    "producciones" : [
+         ["CN", "CN ox FN"],
+         ["CN", "FN"],
+         ["FN", "tt"]
+     ],
+    "inicial" : "CN"
+}
