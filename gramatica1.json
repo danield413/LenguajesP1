@@ -1,8 +1,12 @@
 {
-    "noTerminales" : ["exp"],
+    "noTerminales" : ["E","T","F"],
     "producciones" : [
-         ["exp", "exp opsuma term"],
-         ["exp", "term"]
-     ],
-    "inicial" : "exp"
+            ["E", "E + T"], 
+            ["E", "T"], 
+            ["T", "T * F"], 
+            ["T", "F"], 
+            ["F", "id"], 
+            ["F", "( E )"]   
+    ],
+    "inicial": "E"
 }

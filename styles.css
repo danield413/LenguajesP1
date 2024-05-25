@@ -1,0 +1,31 @@
+* {
+    font-family: "Radio Canada Big", sans-serif;
+}
+
+.flex-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 0 20px;
+}
+
+.estado {
+    border: 1px solid rgb(0, 255, 200);
+    border-radius: 10px;
+    display: grid;
+    grid-template-rows: 10% 1fr;
+    padding: 10px;
+}
+
+.prod {
+    margin-bottom: 8px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.erre {
+    background-color: crimson;
+    color: white;
+}

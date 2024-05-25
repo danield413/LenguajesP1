@@ -11,10 +11,14 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Overpass:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
     <title>Analizador | Estructura de lenguajes</title>
 </head>
 <body class="bg-dark">
-    <h1 class="text-center p-2 bg-primary text-white"><img src="https://pbs.twimg.com/media/B-PjijJIQAA9YuO.jpg" height="60" width="60" alt="logo" class="rounded"/> Estructura de lenguajes - Analizador </h1>
+    <h1 class="text-center p-2 bg-primary text-white"><img src="https://pbs.twimg.com/media/B-PjijJIQAA9YuO.jpg" height="60" width="60" alt="logo" class="rounded"/> Estructura de lenguajes - Analizador LR(0) | SLR(0)</h1>
     <div class="container">
         <div class="row">
          <div class="col-6">
@@ -34,19 +38,17 @@
                 <button id="cancelarGramatica" type="button" class="btn btn-outline-warning d-block mt-2 w-100">Borrar producción</button>
             </form>
             
-            <div class="input-group mt-3">
-                <input type="text" class="form-control bg-dark text-white" id="palabra">
-                <button class="btn btn-primary" type="button" id="probarPalabra">Probar palabra</button>
-              </div>
-              
             <div class="mt-3 btn-group w-100">
                 <button id="leerjson" class="btn btn-success">
                     Leer gramática de JSON
                 </button>
-                <button id="eliminarRecursion" class="btn btn-warning">Eliminar recursión izquierda</button>
             </div>
+            <div class="mt-3 btn-group w-100">
+                <button id="analizar" class="btn btn-success">
+                    Construir autómata LR(0) | SLR(0)
+                </button>
             </div>
-
+        </div>
             
          <div class="col-6">
              <h3 class="text-white mt-2">Grámatica: </h3>
@@ -54,13 +56,10 @@
        </div>
      </div>
      <hr>
-     <div class="container">
-         <div class="row">
-            <h3 class="text-white text-center">Gramática sin recursión</h3>
-            <div id="Resultado" class="text-white mt-2 fw-bold pt-2">
-                <p class="text-center">No hay resultado para mostrar</p>
-            </div>
-        </div>
+    </div>
+
+     <div id="resultado" class="flex-container py-4">
+
      </div>
 
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
