@@ -1,4 +1,4 @@
-export default class AnalizadorLR0 {
+export default class LR0 {
 
     constructor(noTerminales, inicial, producciones) {
         this._noTerminales = noTerminales
@@ -28,7 +28,7 @@ export default class AnalizadorLR0 {
             for (let j = 0; j < cuerpo.length; j++) {
                 //* Si encuentra un punto al final de la producción, agrega el R respectivo
                 if (cuerpo[j] === "." && j === cuerpo.length - 1) {
-                    let indicePosicionProduccion = this.BuscarProduccion(produccion);
+                    let indicePosicionProduccion = this.obtenerInidiceProduccion(produccion);
                     estadosR.push([`R-${indicePosicionProduccion}`, iteracionesEvaluadas.length - 1]);
                 }
                 //* Si encuentra un punto que no está al final y el siguiente caracter no se ha buscado anteriormente
@@ -57,10 +57,10 @@ export default class AnalizadorLR0 {
                     }
     
                     //* Actualiza los elementos de listaProduccionCumplen
-                    listaProduccionCumplen = this.ActulizarListaDeProduccionesIteracion(listaProduccionCumplen);
+                    listaProduccionCumplen = this.actualizarProducciones(listaProduccionCumplen);
     
                     //* Si la lista de producciones no se ha iterado antes, realiza un llamado recursivo
-                    if (this.ValidarQueYaSeIteroLaProduccion(listaProduccionCumplen, iteracionesEvaluadas)) {
+                    if (this.produccionRecorrida(listaProduccionCumplen, iteracionesEvaluadas)) {
                         this.analizar(listaProduccionCumplen, iteracionesEvaluadas, estadosR);
                     }
                 }
@@ -71,20 +71,22 @@ export default class AnalizadorLR0 {
         return estadosR;
     }
     
-    BuscarSiCaracterRepetido(listaDeCaracteresBuscados, caracter) {
-        return !listaDeCaracteresBuscados.includes(caracter);
+    //* Retorna si el caracter se encuentra en la lista o no
+    esCaracterRepetido(lista, caracter) {
+        return !lista.includes(caracter);
     }
 
-    ActulizarListaDeProduccionesIteracion(listaProduccionCumplen) {
+    //* Actualiza las producciones en una iteración
+    actualizarProducciones(listaProduccionCumplen) {
         let nuevaLista = [...listaProduccionCumplen]
         for (let i = 0; i < listaProduccionCumplen.length; i++) {
 
             for (let j = 0; j < listaProduccionCumplen[i][1].length; j++) {
                 if (listaProduccionCumplen[i][1][j] == ".") {
-                    if (this.ValidarSiEsNoTerminal(listaProduccionCumplen[i][1][j + 1])) {
+                    if (this.esNoTerminal(listaProduccionCumplen[i][1][j + 1])) {
                         for (let x = 0; x < this._producciones.length; x++) {
                             if (this._producciones[x][0] == listaProduccionCumplen[i][1][j + 1]) {
-                                if (this.ValidarQueNoSeAgregeRepetido(nuevaLista, this._producciones[x])) {
+                                if (this.validarRepetidos(nuevaLista, this._producciones[x])) {
                                     nuevaLista.push(this._producciones[x])
                                 }
                             }
@@ -95,13 +97,14 @@ export default class AnalizadorLR0 {
         }
 
         if (nuevaLista.length > listaProduccionCumplen.length) {
-            nuevaLista = [...this.ActulizarListaDeProduccionesIteracion(nuevaLista)]
+            nuevaLista = [...this.actualizarProducciones(nuevaLista)]
         }
 
         return nuevaLista;
     }
 
-    ValidarSiEsNoTerminal(caracter) {
+    //* Retorna si el caracter es un no terminal
+    esNoTerminal(caracter) {
 
         let validador = false;
         for (let i = 0; i < this._noTerminales.length; i++) {
@@ -113,11 +116,12 @@ export default class AnalizadorLR0 {
         return validador;
     }
 
-    ValidarQueNoSeAgregeRepetido(listaProduccionCumplen, produccion) {
+    //* Retorna si la producción ya se encuentra en la lista
+    validarRepetidos(lista, produccion) {
 
         let validador = true;
-        for (let i = 0; i < listaProduccionCumplen.length; i++) {
-            if (listaProduccionCumplen[i] == produccion) {
+        for (let i = 0; i < lista.length; i++) {
+            if (lista[i] == produccion) {
                 validador = false;
             }
         }
@@ -125,13 +129,15 @@ export default class AnalizadorLR0 {
         return validador;
     }
 
-    ValidarQueYaSeIteroLaProduccion(listaProduccionCumplen, listaIteraciones) {
+    //* Retorna si la producción ya ha sido recorrida
+    produccionRecorrida(lista, listaIteraciones) {
         return !listaIteraciones.some(iteracion => 
-            JSON.stringify(iteracion) === JSON.stringify(listaProduccionCumplen)
+            JSON.stringify(iteracion) === JSON.stringify(lista)
         );
     }
     
-    BuscarProduccion(produccion) {
+    //* Retorna el índice de la producción
+    obtenerInidiceProduccion(produccion) {
         const produccionPuntoAlInicio = [
             produccion[0],
             ["."].concat(produccion[1].slice(0, -1))
@@ -142,11 +148,11 @@ export default class AnalizadorLR0 {
         );
     }
     
-
-    buscarTerminales(producciones3) {
+    //* Retorna los caracteres que son terminales
+    buscarTerminales(producciones) {
         let terminales = new Set();
     
-        for (let produccion of producciones3) {
+        for (let produccion of producciones) {
             for (let simbolo of produccion[1]) {
                 if (!this._noTerminales.includes(simbolo) && simbolo !== ".") {
                     terminales.add(simbolo);
@@ -157,7 +163,7 @@ export default class AnalizadorLR0 {
         return Array.from(terminales);
     }
     
-
+    //* Retorna si 2 arreglos son iguales
     equals(array1, array2) {
         if (array1.length !== array2.length) return false;
     
@@ -171,9 +177,10 @@ export default class AnalizadorLR0 {
         return true;
     }
 
-    crearGrafo(estadosR, iteraciones) {
+    //* Crea los estados del autómata
+    mostrar(estadosR, iteraciones) {
 
-        let txtGrafo = '';
+        let text = '';
         let contador = 0
 
         for (let i = 0; i < iteraciones.length; i++) {
@@ -194,9 +201,9 @@ export default class AnalizadorLR0 {
                 }
             }
 
-            txtGrafo += "<div class='estado text-center'>";
-            txtGrafo += "<div><h2 class='bg-dark text-white' >Estado: " + i + "</h2> </div";
-            txtGrafo += "<div>"
+            text += "<div class='estado text-center'>";
+            text += "<div><h2 class='bg-dark text-white' >Estado: " + i + "</h2> </div";
+            text += "<div>"
             for (let j = 0; j < iteraciones[i].length; j++) {
                 
 
@@ -211,15 +218,15 @@ export default class AnalizadorLR0 {
                 //si el ultimo caracter es un .
                 if( aux.slice(-1) === "." ) {
                     console.log(aux.slice(-1));
-                    txtGrafo += "<p class='erre flex align-items-center rounded fw-bold prod'>";
+                    text += "<p class='erre flex align-items-center rounded fw-bold prod'>";
                 } else {
-                    txtGrafo += "<p class='text-white prod'>";
+                    text += "<p class='text-white prod'>";
                 }
                 
-                txtGrafo += aux
-                txtGrafo += "</p>";
+                text += aux
+                text += "</p>";
             }
-            txtGrafo += "</div> </div>";
+            text += "</div> </div>";
         }
 
         if(contador === this._producciones.length) {
@@ -236,7 +243,7 @@ export default class AnalizadorLR0 {
               });
         }
 
-        return txtGrafo;
+        return text;
 
     }
 }

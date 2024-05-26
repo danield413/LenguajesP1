@@ -1,4 +1,4 @@
-import AnalizadorLR0 from './LR0.JS'
+import LR0 from './LR0.JS'
 import Formateador from './Formateador.js'
 
 let inicial = "E";
@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             listProducciones
         );
 
-        let anLR = new AnalizadorLR0(listaNoTerminales, inicial, prods);
+        let anLR = new LR0(listaNoTerminales, inicial, prods);
         let rn = [...anLR.analizar(prods, iteraciones, [])];
 
         console.log("rn", rn);
         console.log("iteraciones", iteraciones);
 
-        document.querySelector('#resultado').innerHTML = anLR.crearGrafo(rn, iteraciones);
+        document.querySelector('#resultado').innerHTML = anLR.mostrar(rn, iteraciones);
     });
 
     document.querySelector('#leerjson').addEventListener('click', async () => {
