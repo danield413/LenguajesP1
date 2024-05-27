@@ -1,7 +1,6 @@
 export default class Formateador{
 
     formatearProducciones(noTerminales, inicial, producciones){
-        
         let produccionNueva = [];
         let nuevaProduccion = [];
 
@@ -32,6 +31,7 @@ export default class Formateador{
 
         }
 
+        //console.log(produccionNueva);
         return produccionNueva;
     }
 }

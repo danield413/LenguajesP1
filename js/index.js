@@ -21,13 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             listProducciones
         );
 
-        let anLR = new LR0(listaNoTerminales, inicial, prods);
-        let rn = [...anLR.analizar(prods, iteraciones, [])];
+        let analizador = new LR0(listaNoTerminales, inicial, prods);
+        //* iteraciones se pasa por referencia para que se actualice en la función
+        let rn = [...analizador.analizar(prods, iteraciones, [])];
 
-        console.log("rn", rn);
-        console.log("iteraciones", iteraciones);
-
-        document.querySelector('#resultado').innerHTML = anLR.mostrar(rn, iteraciones);
+        document.querySelector('#resultado').innerHTML = analizador.mostrar(rn, iteraciones);
     });
 
     document.querySelector('#leerjson').addEventListener('click', async () => {
@@ -77,7 +75,6 @@ function guardarGramatica() {
     let ListNoTerminalProduccion = [];
     ListNoTerminalProduccion.push(noTerminalForm);
     ListNoTerminalProduccion.push(produccionForm);
-
 
     document.getElementById("formGramatica").reset();
 
